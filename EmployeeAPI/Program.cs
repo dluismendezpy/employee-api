@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,14 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
 var app = builder.Build();
 
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+// USE STATICFILES  
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(
+        Directory.GetCurrentDirectory(), "Photos")),
+    RequestPath = "/Photos"
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
