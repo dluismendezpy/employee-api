@@ -154,5 +154,30 @@ namespace EmployeeAPI.Controllers
                 return new JsonResult("default.png");
             }
         }
+
+        [Route("DepartmentList")]
+        [HttpGet]
+        public JsonResult GetAlldepartmentsNames()
+        {
+            string query = @"SELECT DepartmentName FROM dbo.Department";
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppConn");
+            SqlDataReader myReader;
+
+            using (SqlConnection myConn = new SqlConnection(sqlDataSource))
+            {
+                myConn.Open();
+
+                using (SqlCommand myCommand = new SqlCommand(query, myConn))
+                {
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+
+                    myReader.Close();
+                    myConn.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
     }
 }
